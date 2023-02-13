@@ -1,0 +1,54 @@
+<style>
+    .svg1{
+        background-color: black;
+    }
+</style>
+<html>
+    <body>
+        <head><script src="https://d3js.org/d3.v7.min.js"></script></head>
+        <p id="p3">
+            <h1> Question 3</h1>
+            <svg id = "svg2" class = "svg2" height="420" width="420"></svg>
+            <input type="range" id="lightness" name="lightness" min="0" max="200" step="1" value =80>
+            <script>
+                const svg2 = d3.select("svg#svg2")
+                const width = svg2.attr("width")
+                const height = svg2.attr("height")
+                const margin = {top: 10, right: 10, bottom: 10, left: 10};
+                const chartWidth = width - margin.left - margin.right;
+                const chartHeight = height - margin.top - margin.bottom;
+                var singlearray = []
+                for (let j = 0; j<=20; j++){
+                for (let i = 0; i < 21; i++) {
+                        a = i*18
+                        b = j*5
+                        singlearray.push({c: b, h: a})
+                    }
+                }
+                let xScale = d3.scaleLinear()
+                                .domain([0, 360])
+                                .range([margin.left, chartWidth]);
+
+                let yScale = d3.scaleLinear()
+                                .domain([100, 0])
+                                .range([margin.bottom, chartHeight]);
+
+                console.log(singlearray)
+                function showCircles(lightness) {
+                    svg2.selectAll('circle').data(singlearray)
+                    .join('circle')
+                    .attr('r', '10')
+                    .attr('cx', d => xScale(d['h']))
+                    .attr('cy', d => yScale(d['c']))
+                    .attr('fill', d => d3.hcl(d['h'],d['c'], lightness));
+                }
+                showCircles(d3.select('#lightness').attr("value"));
+                d3.select('#lightness')
+                    .on("input", function() {
+                        showCircles(this.value);
+                        console.log(this.value)
+                    });
+            </script>
+        </p>
+    </body>
+</html>
